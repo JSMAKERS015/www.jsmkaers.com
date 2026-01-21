@@ -1,0 +1,1399 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>JS MAKERS | Resources</title>
+
+    <!-- ============ GOOGLE FONTS ============ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Electrolize&family=Oxanium:wght@200..800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ============ CSS RESET & BASE STYLES ============ */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background-color: #ffffff;
+        color: #333333;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+
+      /* ============ COLOR VARIABLES ============ */
+      :root {
+        --primary: rgb(255, 255, 255);
+        --background-light: #ffffff;
+        --surface-light: #ffffff;
+        --surface-light-alt: #ffffff;
+        --border-light: #ffffff;
+        --text-primary: #000000;
+        --text-secondary: #666666;
+        --text-muted: #ffffff;
+      }
+
+      /* ============ MAIN NAVIGATION ============ */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        height: 96px;
+        background: transparent;
+        transition: transform 0.3s ease;
+      }
+
+      nav.nav-hidden {
+        transform: translateY(-100%);
+      }
+
+      /* ============ NAVIGATION CONTAINER ============ */
+      .nav-container {
+        width: 100%;
+        padding: 0 24px 0 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav-left,
+      .nav-right {
+        flex: 1;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav-left {
+        position: fixed;
+        top: 0;
+        left: 24px;
+        height: 96px;
+        display: flex;
+        align-items: center;
+        z-index: 102;
+        transition: transform 0.3s ease;
+      }
+
+      .nav-left.nav-hidden {
+        transform: translateY(-100%);
+      }
+
+      .nav-right {
+        justify-content: flex-end;
+        gap: 40px;
+        padding-right: 40px; /* Added for better spacing */
+      }
+
+      /* ============ NAVIGATION LINKS WITH HOVER ANIMATION ============ */
+      .nav-links {
+        display: flex;
+        gap: 40px;
+        position: relative;
+      }
+
+      .nav-link {
+        font-size: 11px;
+        font-weight: bold;
+        font-family: "Electrolize", sans-serif;
+        letter-spacing: 0.2em;
+        color: #ffffff;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        position: relative;
+        padding: 8px 0;
+        white-space: nowrap;
+      }
+
+      /* Simple hover effect like Robotic Arm page */
+      .nav-link:hover {
+        color: #ffffff; /* Slightly lighter white on hover */
+        transform: translateY(-1px); /* Subtle lift effect */
+      }
+
+      .nav-link.active {
+        color: #ffffff;
+        position: relative;
+      }
+
+      /* ANIMATED LINE UNDER NAVIGATION ON HOVER */
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: var(--primary);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 1px;
+      }
+
+      /* Active link has permanent line */
+      .nav-link.active::after {
+        transform: scaleX(1);
+      }
+
+      /* Hover effect - line grows from left to right */
+      .nav-link:hover::after {
+        transform: scaleX(1);
+      }
+
+      /* Alternative: Line grows from center on hover */
+      .nav-link.alternative::after {
+        transform-origin: center;
+      }
+
+      /* ============ LOGO STYLES ============ */
+      .logo-image {
+        height: 50px;
+        width: auto;
+        transition: opacity 0.3s ease;
+        filter: brightness(0) invert(0);
+      }
+
+      .logo-image:hover {
+        opacity: 0.8;
+      }
+
+      /* ============ NAVIGATION ICONS  ============ */
+      .nav-icons {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        border-left: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+        padding-left: 40px;
+      }
+
+      /* ============ HERO SECTION ============ */
+      .guide-hero {
+        width: 100%;
+        position: relative;
+        height: 50vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      .guide-hero video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+      }
+
+      .guide-hero-content {
+        max-width: 800px;
+        position: relative;
+        z-index: 50;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .guide-title {
+        font-size: 64px;
+        font-weight: bold;
+        margin-bottom: 32px;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+        color: white;
+      }
+
+      .guide-subtitle {
+        color: white;
+        font-size: 18px;
+        margin-bottom: 48px;
+        line-height: 1.75;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        font-weight: 500;
+      }
+
+      /* ============ MOBILE NAVIGATION ============ */
+      .menu-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        transition: transform 0.3s ease;
+        display: none;
+        background: none;
+        border: none;
+        color: var(--text-primary);
+        font-size: 24px;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 4px;
+      }
+
+      .menu-toggle.nav-hidden {
+        transform: translateY(-100px);
+      }
+
+      /* MOBILE DRAWER */
+      .mobile-nav {
+        position: fixed;
+        top: 0;
+        right: -300px;
+        width: 300px;
+        height: 100vh;
+        background: #ffffff;
+        z-index: 1000;
+        padding: 80px 30px 30px 30px;
+        transition: right 0.3s ease;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        border-left: 1px solid var(--border-light);
+      }
+
+      .mobile-nav.active {
+        right: 0;
+      }
+
+      .mobile-nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .mobile-nav-link {
+        font-size: 14px;
+        font-weight: bold;
+        /*letter-spacing: 0.2em;*/
+        color: var(--text-primary);
+        text-transform: uppercase;
+        text-decoration: none;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border-light);
+        transition: color 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .mobile-nav-link:hover,
+      .mobile-nav-link.active {
+        color: var(--primary);
+      }
+
+      /* Mobile animated line */
+      .mobile-nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: var(--primary);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 1px;
+      }
+
+      .mobile-nav-link.active::after {
+        transform: scaleX(1);
+      }
+
+      .mobile-nav-link:hover::after {
+        transform: scaleX(1);
+      }
+
+      .mobile-nav-icons {
+        margin-top: 30px;
+        display: flex;
+        gap: 15px;
+      }
+
+      .close-menu {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: none;
+        color: var(--text-primary);
+        font-size: 24px;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .close-menu:hover {
+        color: var(--primary);
+      }
+
+      /* ============ RESPONSIVE STYLES ============ */
+      @media (max-width: 768px) {
+        .nav-right {
+          display: none;
+        }
+
+        .menu-toggle {
+          display: block;
+        }
+
+        .guide-hero {
+          height: 60vh;
+        }
+
+        .guide-title {
+          font-size: 48px;
+          margin-bottom: 24px;
+        }
+
+        .guide-subtitle {
+          font-size: 25px;
+          padding: 0 16px;
+          margin-bottom: 32px;
+        }
+      }
+
+      @media (min-width: 769px) {
+        .nav-right {
+          display: flex !important;
+        }
+
+        .mobile-nav {
+          display: none !important;
+        }
+
+        .menu-toggle {
+          display: none !important;
+        }
+      }
+
+      /* ============ FILTER NAVIGATION ============ */
+      .filter-nav {
+        max-width: 1280px;
+        margin: 48px auto 64px;
+        padding: 0 24px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .filter-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 0;
+        gap: 0;
+      }
+
+      .filter-btn {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        padding: 8px 8px;
+        position: relative;
+        white-space: nowrap;
+      }
+
+      /* SLASH BETWEEN BUTTONS */
+      .filter-btn:not(:last-child)::after {
+        content: "/";
+        position: absolute;
+        right: -2px;
+        color: #ccc;
+        font-weight: 300;
+        font-size: 12px;
+      }
+
+      .filter-btn:hover {
+        color: var(--text-primary);
+      }
+
+      .filter-btn.active {
+        color: var(--primary);
+        font-weight: 700;
+      }
+
+      /* ============ MOBILE FILTER ============ */
+      @media (max-width: 768px) {
+        .filter-nav {
+          margin: 32px auto 48px;
+          padding: 0 16px;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          overflow-x: hidden;
+        }
+
+        .filter-container {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 4px 8px;
+          padding: 8px 0;
+          width: auto;
+          max-width: 100%;
+        }
+
+        .filter-btn {
+          font-family: "Google Sans", sans-serif;
+        }
+
+        .filter-btn:not(:last-child)::after {
+          right: -6px;
+          font-size: 11px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+
+      /* ============ GUIDE CARDS ============ */
+      .guide-section {
+        max-width: 1280px;
+        margin: 0 auto 80px;
+        padding: 0 24px;
+      }
+
+      .guide-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+      }
+
+      @media (min-width: 768px) {
+        .guide-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 32px;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .guide-grid {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 32px;
+        }
+      }
+
+      /* CARD STYLES */
+      .guide-card {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        position: relative;
+        transition: transform 0.3s ease;
+      }
+
+      .guide-card:hover {
+        transform: translateY(-4px);
+      }
+
+      .guide-image-container {
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        border-radius: 4px;
+        aspect-ratio: 16/9;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--surface-light-alt);
+      }
+
+      .guide-image {
+        width: auto;
+        height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+        display: block;
+        transition: transform 0.5s ease;
+      }
+
+      .guide-card:hover .guide-image {
+        transform: scale(1.05);
+      }
+
+      .view-guide-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.9);
+        padding: 12px 24px;
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        border: none;
+        border-radius: 2px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        z-index: 2;
+        font-family: "Google Sans", sans-serif;
+      }
+
+      .guide-card:hover .view-guide-btn {
+        opacity: 1;
+        visibility: visible;
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      .view-guide-btn:hover {
+        background: #000;
+      }
+
+      .guide-name {
+        font-size: 16px;
+        font-weight: 400;
+        color: #000;
+        margin: 0;
+        line-height: 1.4;
+        text-align: center;
+        text-transform: uppercase;
+        font-family: "Google Sans", sans-serif;
+        letter-spacing: 0.5px;
+        padding: 8px 0;
+      }
+
+      /* MOBILE RESPONSIVE */
+      @media (max-width: 768px) {
+        .guide-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 16px;
+        }
+
+        .view-guide-btn {
+          padding: 10px 20px;
+          font-size: 11px;
+        }
+
+        .guide-name {
+          font-size: 14px;
+        }
+      }
+
+      /* ============ MISC STYLES ============ */
+      ::selection {
+        background-color: rgba(16, 185, 129, 0.2);
+      }
+
+      /* ============ CUSTOM SCROLLBAR ============ */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--surface-light);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--border-light);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--text-muted);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ==================== HTML STARTS FROM HERE ==================== -->
+    <nav>
+      <div class="nav-container">
+        <div class="nav-left">
+          <a href="index.html"
+            ><img src="images/logo.png" alt="JS Makers" class="logo-image"
+          /></a>
+        </div>
+        <div class="nav-right">
+          <div class="nav-links">
+            <a class="nav-link" href="index.html" data-index="0">Home</a>
+            <a class="nav-link" href="store.html" data-index="1">Store</a>
+            <a class="nav-link active" href="Resources.html" data-index="2"
+              >RESOURCES</a
+            >
+            <a class="nav-link" href="Account.html" data-index="3">Account</a>
+          </div>
+          <div class="nav-icons"></div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ============ MOBILE MENU ============ -->
+    <button class="menu-toggle" id="menuToggle">☰</button>
+
+    <!-- ============ MOBILE NAVIGATION DRAWER ============ -->
+    <div class="mobile-nav" id="mobileNav">
+      <button class="close-menu" id="closeMenu">✕</button>
+
+      <div class="mobile-nav-links">
+        <a class="mobile-nav-link" href="index.html" data-index="0">Home</a>
+        <a class="mobile-nav-link" href="store.html" data-index="1">Store</a>
+        <a class="mobile-nav-link active" href="Resources.html" data-index="2"
+          >RESOURCES</a
+        >
+        <a class="mobile-nav-link" href="Account.html" data-index="3"
+          >Account</a
+        >
+      </div>
+      <div class="mobile-nav-icons">
+        <!-- Cart removed from mobile too -->
+      </div>
+    </div>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <main>
+      <section class="guide-hero">
+        <video autoplay muted loop playsinline>
+          <source src="videos/assembly-video.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <div class="guide-hero-content">
+          <h1 class="guide-title">Resources<br /></h1>
+          <p class="guide-subtitle">REPLICATE MY PROJECT</p>
+        </div>
+      </section>
+
+      <div class="filter-nav">
+        <div class="filter-container">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="chassis">Chassis</button>
+          <button class="filter-btn" data-filter="dks-pro">DKS Pro</button>
+          <button class="filter-btn" data-filter="radiocontrol">
+            Radiocontrol
+          </button>
+          <button class="filter-btn" data-filter="cramer">Cramer</button>
+          <button class="filter-btn" data-filter="dks-basic">DKS Basic</button>
+          <button class="filter-btn" data-filter="bodykits">Body Kits</button>
+          <button class="filter-btn" data-filter="sound">Sound</button>
+        </div>
+      </div>
+
+      <section class="guide-section" style="padding-top: 0">
+        <div class="guide-grid">
+          <!-- GUIDE CARD 1 - ROBOTIC ARM -->
+          <a
+            href="Robotic Arm.html"
+            class="guide-card"
+            data-category="robotic-arm"
+          >
+            <div class="guide-image-container">
+              <img
+                src="Robotic Arm/2.jpg"
+                alt="Robotic Arm Assembly Guide"
+                class="guide-image"
+              />
+              <button class="view-guide-btn">
+                <i class="fas fa-eye"></i> View Guide
+              </button>
+            </div>
+            <h4 class="guide-name">Robotic Arm Assembly Guide</h4>
+          </a>
+
+          <!-- GUIDE CARD 2 -->
+          <a
+            href="assembly-mod-correa-cramer.html"
+            class="guide-card"
+            data-category="cramer"
+          >
+            <div class="guide-image-container">
+              <img
+                src="assembly/gearbox2.jpg"
+                alt="Mod Correa Cramer Guide"
+                class="guide-image"
+              />
+              <button class="view-guide-btn">
+                <i class="fas fa-eye"></i> View Guide
+              </button>
+            </div>
+            <h4 class="guide-name">Mod Correa Cramer Assembly Guide</h4>
+          </a>
+
+          <!-- GUIDE CARD 3 -->
+          <a
+            href="assembly-mod-correa-dks-basic.html"
+            class="guide-card"
+            data-category="dks-basic"
+          >
+            <div class="guide-image-container">
+              <img
+                src="assembly/gearbox3.jpg"
+                alt="Mod Correa DKS Basic Guide"
+                class="guide-image"
+              />
+              <button class="view-guide-btn">
+                <i class="fas fa-eye"></i> View Guide
+              </button>
+            </div>
+            <h4 class="guide-name">Mod Correa DKS Basic Guide</h4>
+          </a>
+
+          <!-- GUIDE CARD 4 -->
+          <a
+            href="assembly-mod-metal-cramer.html"
+            class="guide-card"
+            data-category="cramer"
+          >
+            <div class="guide-image-container">
+              <img
+                src="assembly/gearbox4.jpg"
+                alt="Mod Metal Cramer Guide"
+                class="guide-image"
+              />
+              <button class="view-guide-btn">
+                <i class="fas fa-eye"></i> View Guide
+              </button>
+            </div>
+            <h4 class="guide-name">Mod Metal Cramer Assembly Guide</h4>
+          </a>
+
+          <!-- GUIDE CARD 5 -->
+          <a
+            href="assembly-chassis-dks-basic.html"
+            class="guide-card"
+            data-category="chassis"
+          >
+            <div class="guide-image-container">
+              <img
+                src="assembly/chassis1.jpg"
+                alt="Chassis DKS-Basic Guide"
+                class="guide-image"
+              />
+              <button class="view-guide-btn">
+                <i class="fas fa-eye"></i> View Guide
+              </button>
+            </div>
+            <h4 class="guide-name">Chassis DKS-Basic Assembly Guide</h4>
+          </a>
+
+          <!-- GUIDE CARD 6 -->
+          <a
+            href="assembly-delorean-bttf.html"
+            class="guide-card"
+            data-category="bodykits"
+          >
+            <div class="guide-image-container">
+              <img
+                src="assembly/chassis1.jpg"
+                alt="Delorean BTTF Guide"
+                class="guide-image"
+              />
+              <button class="view-guide-btn">
+                <i class="fas fa-eye"></i> View Guide
+              </button>
+            </div>
+            <h4 class="guide-name">Delorean BTTF Body Kit Guide</h4>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <!--------------------- Footer Container ---------------------->
+    <div id="footer-container">
+      <!-- Footer will load here -->
+    </div>
+
+    <footer
+      style="
+        background: #000000;
+        color: #ffffff;
+        padding: 20px 0 10px 0;
+        width: 100%;
+        font-family: &quot;Google Sans&quot;, sans-serif;
+      "
+    >
+      <div
+        style="
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 40px;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          flex-wrap: wrap;
+        "
+      >
+        <div
+          style="
+            flex: 1;
+            min-width: 300px;
+            margin-bottom: 30px;
+            max-width: 500px;
+            margin-top: 30px;
+          "
+        >
+          <a
+            href="index.html"
+            style="display: inline-block; margin-bottom: 20px"
+          >
+            <img
+              src="images/logo.png"
+              alt="JS Makers"
+              style="height: 60px; width: auto; filter: brightness(0) invert(1)"
+            />
+          </a>
+          <p
+            style="
+              font-size: 14px;
+              color: #999999;
+              line-height: 1.6;
+              max-width: 400px;
+              margin-top: -10px;
+            "
+          >
+            Building the future of DIY robotics and 3D printing. Detailed
+            guides, and community-driven innovation.
+          </p>
+        </div>
+
+        <div
+          style="
+            flex: 1;
+            min-width: 300px;
+            margin-bottom: 30px;
+            margin-left: auto;
+            text-align: right;
+          "
+        >
+          <div style="margin-bottom: 40px">
+            <h4
+              style="
+                font-size: 16px;
+                color: #ffffff;
+                margin-bottom: 20px;
+                margin-top: 20px;
+                font-weight: bold;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+              "
+            >
+              Social Networks
+            </h4>
+            <div
+              style="
+                display: flex;
+                gap: 20px;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+              "
+            >
+              <!-- YouTube -->
+              <a
+                href="https://youtube.com/@JS.MAKERS"
+                target="_blank"
+                style="
+                  color: #999;
+                  text-decoration: none;
+                  transition: all 0.3s ease;
+                "
+                onmouseover="
+                  this.style.color = '#FF0000';
+                  this.style.transform = 'translateY(-2px)';
+                "
+                onmouseout="
+                  this.style.color = '#999';
+                  this.style.transform = 'translateY(0)';
+                "
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"
+                  />
+                </svg>
+              </a>
+
+              <!-- Instagram -->
+              <a
+                href="https://instagram.com/jsmakers"
+                target="_blank"
+                style="
+                  color: #999;
+                  text-decoration: none;
+                  transition: all 0.3s ease;
+                "
+                onmouseover="
+                  this.style.color = '#E4405F';
+                  this.style.transform = 'translateY(-2px)';
+                "
+                onmouseout="
+                  this.style.color = '#999';
+                  this.style.transform = 'translateY(0)';
+                "
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                  />
+                </svg>
+              </a>
+
+              <!-- Twitter/X -->
+              <a
+                href="https://twitter.com/jsmakers"
+                target="_blank"
+                style="
+                  color: #999;
+                  text-decoration: none;
+                  transition: all 0.3s ease;
+                "
+                onmouseover="
+                  this.style.color = '#000000';
+                  this.style.transform = 'translateY(-2px)';
+                "
+                onmouseout="
+                  this.style.color = '#999';
+                  this.style.transform = 'translateY(0)';
+                "
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                  />
+                </svg>
+              </a>
+
+              <!-- GitHub -->
+              <a
+                href="https://github.com/jsmakers"
+                target="_blank"
+                style="
+                  color: #999;
+                  text-decoration: none;
+                  transition: all 0.3s ease;
+                "
+                onmouseover="
+                  this.style.color = '#4078c0';
+                  this.style.transform = 'translateY(-2px)';
+                "
+                onmouseout="
+                  this.style.color = '#999';
+                  this.style.transform = 'translateY(0)';
+                "
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                  />
+                </svg>
+              </a>
+
+              <!-- Discord -->
+              <a
+                href="https://discord.gg/jsmakers"
+                target="_blank"
+                style="
+                  color: #999;
+                  text-decoration: none;
+                  transition: all 0.3s ease;
+                "
+                onmouseover="
+                  this.style.color = '#5865F2';
+                  this.style.transform = 'translateY(-2px)';
+                "
+                onmouseout="
+                  this.style.color = '#999';
+                  this.style.transform = 'translateY(0)';
+                "
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M20.317 4.369a19.791 19.791 0 00-4.885-1.515a.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0a12.64 12.64 0 00-.617-1.25a.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057a19.9 19.9 0 005.993 3.03a.078.078 0 00.084-.028a14.09 14.09 0 001.226-1.994a.076.076 0 00-.041-.106a13.107 13.107 0 01-1.872-.892a.077.077 0 01-.008-.128a10.2 10.2 0 00.372-.292a.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127a12.299 12.299 0 01-1.873.892a.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028a19.839 19.839 0 006.002-3.03a.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h4
+              style="
+                font-size: 16px;
+                color: #ffffff;
+                margin-bottom: 20px;
+                font-weight: bold;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+              "
+            >
+              LEGAL
+            </h4>
+            <div
+              style="
+                display: flex;
+                flex-direction: row;
+                gap: 30px;
+                align-items: center;
+                justify-content: flex-end;
+              "
+            >
+              <a
+                href="legal-notice.html"
+                style="
+                  font-size: 14px;
+                  color: #999999;
+                  text-decoration: none;
+                  transition: color 0.3s ease;
+                  white-space: nowrap;
+                "
+                onmouseover="this.style.color = '#ffffff'"
+                onmouseout="this.style.color = '#999999'"
+              >
+                LEGAL NOTICE
+              </a>
+              <a
+                href="privacy-policy.html"
+                style="
+                  font-size: 14px;
+                  color: #999999;
+                  text-decoration: none;
+                  transition: color 0.3s ease;
+                  white-space: nowrap;
+                "
+                onmouseover="this.style.color = '#ffffff'"
+                onmouseout="this.style.color = '#999999'"
+              >
+                PRIVACY POLICY
+              </a>
+              <a
+                href="cookies-policy.html"
+                style="
+                  font-size: 14px;
+                  color: #999999;
+                  text-decoration: none;
+                  transition: color 0.3s ease;
+                  white-space: nowrap;
+                "
+                onmouseover="this.style.color = '#ffffff'"
+                onmouseout="this.style.color = '#999999'"
+              >
+                COOKIES POLICY
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 10px;
+          border-top: 1px solid #333333;
+          text-align: center;
+        "
+      >
+        <p
+          style="
+            font-size: 12px;
+            color: #666666;
+            letter-spacing: 0.5px;
+            margin: 8px 0;
+          "
+        >
+          © 2026 JS MAKERS. All rights reserved
+        </p>
+      </div>
+    </footer>
+
+    <style>
+      /* Mobile responsive styles for footer */
+      @media (max-width: 768px) {
+        footer > div:first-child {
+          flex-direction: column !important;
+          align-items: center !important;
+          text-align: center !important;
+          padding: 0 20px !important;
+        }
+
+        footer > div:first-child > div {
+          width: 100% !important;
+          text-align: center !important;
+          margin-left: 0 !important;
+          margin-bottom: 20px !important;
+        }
+
+        footer > div:first-child > div:last-child {
+          text-align: center !important;
+        }
+
+        footer > div:first-child > div:last-child > div:first-child > div {
+          justify-content: center !important;
+          gap: 15px !important;
+        }
+
+        footer > div:first-child > div:last-child > div:last-child > div {
+          justify-content: center !important;
+          flex-direction: column !important;
+          gap: 15px !important;
+        }
+      }
+    </style>
+
+    <script>
+      // ======================== MOBILE MENU FUNCTIONALITY ========================
+      const menuToggle = document.getElementById("menuToggle");
+      const closeMenu = document.getElementById("closeMenu");
+      const mobileNav = document.getElementById("mobileNav");
+
+      function setupMobileMenu() {
+        if (menuToggle && closeMenu && mobileNav) {
+          menuToggle.addEventListener("click", () => {
+            mobileNav.classList.add("active");
+            document.body.style.overflow = "hidden";
+          });
+
+          closeMenu.addEventListener("click", () => {
+            mobileNav.classList.remove("active");
+            document.body.style.overflow = "auto";
+          });
+
+          mobileNav.addEventListener("click", (e) => {
+            if (e.target === mobileNav) {
+              mobileNav.classList.remove("active");
+              document.body.style.overflow = "auto";
+            }
+          });
+
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && mobileNav.classList.contains("active")) {
+              mobileNav.classList.remove("active");
+              document.body.style.overflow = "auto";
+            }
+          });
+        }
+      }
+
+      // ======================== NAVIGATION SCROLL BEHAVIOR ========================
+      let lastScrollTop = 0;
+      const nav = document.querySelector("nav");
+      const navLeft = document.querySelector(".nav-left");
+
+      function updateNavVisibility() {
+        const scrollTop =
+          window.pageYOffset || document.documentElement.scrollTop;
+
+        if (scrollTop <= 50) {
+          nav.classList.remove("nav-hidden");
+          navLeft.classList.remove("nav-hidden");
+
+          if (menuToggle && window.innerWidth <= 768) {
+            menuToggle.classList.remove("nav-hidden");
+          }
+        } else {
+          nav.classList.add("nav-hidden");
+          navLeft.classList.add("nav-hidden");
+
+          if (menuToggle && window.innerWidth <= 768) {
+            menuToggle.classList.add("nav-hidden");
+          }
+        }
+
+        lastScrollTop = scrollTop;
+      }
+
+      // ======================== ACTIVE LINK MANAGEMENT ========================
+      function setupActiveLinks() {
+        const navLinks = document.querySelectorAll(".nav-link");
+        const mobileNavLinks = document.querySelectorAll(".mobile-nav-link");
+
+        // Set active link based on current page
+        function setActiveLink() {
+          const currentPage =
+            window.location.pathname.split("/").pop() || "index.html";
+
+          // Update desktop links
+          navLinks.forEach((link) => {
+            const linkPage = link.getAttribute("href");
+            if (linkPage === currentPage) {
+              link.classList.add("active");
+            } else {
+              link.classList.remove("active");
+            }
+          });
+
+          // Update mobile links
+          mobileNavLinks.forEach((link) => {
+            const linkPage = link.getAttribute("href");
+            if (linkPage === currentPage) {
+              link.classList.add("active");
+            } else {
+              link.classList.remove("active");
+            }
+          });
+        }
+
+        // Click handlers for desktop
+        navLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            // Update active class
+            navLinks.forEach((l) => l.classList.remove("active"));
+            this.classList.add("active");
+
+            // Update mobile link
+            const index = this.getAttribute("data-index");
+            const mobileLink = document.querySelector(
+              `.mobile-nav-link[data-index="${index}"]`,
+            );
+            if (mobileLink) {
+              mobileNavLinks.forEach((l) => l.classList.remove("active"));
+              mobileLink.classList.add("active");
+            }
+          });
+        });
+
+        // Click handlers for mobile
+        mobileNavLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            // Update active class
+            mobileNavLinks.forEach((l) => l.classList.remove("active"));
+            this.classList.add("active");
+
+            // Update desktop link
+            const index = this.getAttribute("data-index");
+            const desktopLink = document.querySelector(
+              `.nav-link[data-index="${index}"]`,
+            );
+            if (desktopLink) {
+              navLinks.forEach((l) => l.classList.remove("active"));
+              desktopLink.classList.add("active");
+            }
+
+            // Close mobile menu after click
+            setTimeout(() => {
+              mobileNav.classList.remove("active");
+              document.body.style.overflow = "auto";
+            }, 300);
+          });
+        });
+
+        // Set initial active state
+        setActiveLink();
+      }
+
+      // ======================== PAGE LOAD INITIALIZATION ========================
+      document.addEventListener("DOMContentLoaded", function () {
+        // Setup mobile menu
+        setupMobileMenu();
+
+        // Set active link
+        const currentPage =
+          window.location.pathname.split("/").pop() || "index.html";
+        const allLinks = document.querySelectorAll(
+          ".nav-link, .mobile-nav-link",
+        );
+
+        allLinks.forEach((link) => {
+          const linkPage = link.getAttribute("href");
+          if (linkPage === currentPage) {
+            link.classList.add("active");
+          } else {
+            link.classList.remove("active");
+          }
+        });
+
+        // Setup scroll behavior
+        updateNavVisibility();
+        window.addEventListener("scroll", updateNavVisibility);
+        window.addEventListener("resize", updateNavVisibility);
+
+        // Handle mobile menu on resize
+        window.addEventListener("resize", function () {
+          if (
+            window.innerWidth > 768 &&
+            mobileNav.classList.contains("active")
+          ) {
+            mobileNav.classList.remove("active");
+            document.body.style.overflow = "auto";
+          }
+        });
+
+        // Filter button functionality
+        const filterButtons = document.querySelectorAll(".filter-btn");
+        filterButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            // Remove active class from all buttons
+            filterButtons.forEach((btn) => btn.classList.remove("active"));
+            // Add active class to clicked button
+            this.classList.add("active");
+
+            // Filter functionality would go here
+            const filter = this.getAttribute("data-filter");
+            console.log("Filter by:", filter);
+          });
+        });
+
+        // View guide button functionality
+        const viewGuideButtons = document.querySelectorAll(".view-guide-btn");
+        viewGuideButtons.forEach((button) => {
+          button.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const card = this.closest(".guide-card");
+            const guideName = card.querySelector(".guide-name").textContent;
+            alert(`Opening ${guideName}...`);
+            // Or redirect: window.location.href = card.getAttribute('href');
+          });
+        });
+      });
+
+      // ======================== SCROLL EVENT DEBOUNCING ========================
+      let scrollTimeout;
+      window.addEventListener("scroll", function () {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(updateNavVisibility, 50);
+      });
+    </script>
+  </body>
+</html>

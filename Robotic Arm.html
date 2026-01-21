@@ -1,0 +1,3164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- ============ GOOGLE FONTS ============ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Electrolize&family=Oxanium:wght@200..800&display=swap"
+      rel="stylesheet"
+    />
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>JS MAKERS | Robotic Arm Assembly</title>
+    <style>
+      /* ============ CSS RESET & BASE STYLES ============ */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background-color: #ffffff;
+        color: #333333;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+
+      /* ============ COLOR VARIABLES ============ */
+      :root {
+        --primary: rgb(255, 255, 255);
+        --background-light: #ffffff;
+        --surface-light: #ffffff;
+        --surface-light-alt: #ffffff;
+        --border-light: #ffffff;
+        --text-primary: #000000;
+        --text-secondary: #666666;
+        --text-muted: #ffffff;
+      }
+
+      /* ============ MAIN NAVIGATION ============ */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        height: 96px;
+        background: transparent;
+        transition: transform 0.3s ease;
+      }
+
+      nav.nav-hidden {
+        transform: translateY(-100%);
+      }
+
+      /* ============ NAVIGATION CONTAINER ============ */
+      .nav-container {
+        width: 100%;
+        padding: 0 24px 0 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav-left,
+      .nav-right {
+        flex: 1;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav-left {
+        position: fixed;
+        top: 0;
+        left: 24px;
+        height: 96px;
+        display: flex;
+        align-items: center;
+        z-index: 102;
+        transition: transform 0.3s ease;
+      }
+
+      .nav-left.nav-hidden {
+        transform: translateY(-100%);
+      }
+
+      .nav-right {
+        justify-content: flex-end;
+        gap: 40px;
+      }
+
+      /* ============ NAVIGATION LINKS ============ */
+      .nav-links {
+        display: flex;
+        gap: 40px;
+        position: relative;
+      }
+
+      .nav-link {
+        font-size: 11px;
+        font-weight: bold;
+        font-family: "Electrolize", sans-serif;
+        letter-spacing: 0.2em;
+        color: #ffffff;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        position: relative;
+        padding: 8px 0;
+        white-space: nowrap;
+      }
+
+      /* Simple hover effect like Robotic Arm page */
+      .nav-link:hover {
+        color: #ffffff; /* Slightly lighter white on hover */
+        transform: translateY(-1px); /* Subtle lift effect */
+      }
+
+      .nav-link.active {
+        color: #ffffff;
+        position: relative;
+      }
+
+      /* ANIMATED LINE UNDER NAVIGATION ON HOVER */
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: var(--primary);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 1px;
+      }
+
+      /* Active link has permanent line */
+      .nav-link.active::after {
+        transform: scaleX(1);
+      }
+
+      /* Hover effect - line grows from left to right */
+      .nav-link:hover::after {
+        transform: scaleX(1);
+      }
+
+      /* Alternative: Line grows from center on hover */
+      .nav-link.alternative::after {
+        transform-origin: center;
+      }
+
+      /* ============ LOGO STYLES ============ */
+      .logo-image {
+        height: 50px;
+        width: auto;
+        transition: opacity 0.3s ease;
+        filter: brightness(0) invert(0);
+      }
+
+      .logo-image:hover {
+        opacity: 0.8;
+      }
+
+      /* ============ NAVIGATION ICONS ============ */
+      .nav-icons {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        border-left: 1px solid var(--border-light);
+        padding-left: 40px;
+      }
+
+      /* ============ CART ICON ============ */
+      .icon-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        position: relative;
+      }
+
+      .cart-badge .badge {
+        position: absolute;
+        top: -6px;
+        right: -8px;
+        background: var(--primary);
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        min-width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        padding: 0 4px;
+      }
+
+      /* ============ HERO SECTION ============ */
+      .guide-hero {
+        width: 100%;
+        position: relative;
+        height: 50vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      .guide-hero video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+      }
+
+      .guide-hero-content {
+        max-width: 800px;
+        position: relative;
+        z-index: 50;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .guide-title {
+        font-size: 64px;
+        font-weight: bold;
+        margin-bottom: 32px;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+        color: white;
+      }
+
+      .guide-subtitle {
+        color: white;
+        font-size: 18px;
+        margin-bottom: 48px;
+        line-height: 1.75;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        font-weight: 500;
+      }
+
+      /* ============ CONSTRUCTION GUIDE TEXT SECTION ============ */
+      .construction-text-section {
+        width: 100%; /* ← FULL WIDTH */
+        margin: 80px 0; /* ← NO AUTO MARGIN */
+        padding: 0 80px;
+      }
+
+      .construction-text-section h2 {
+        font-family: "Google Sans", sans-serif;
+        font-size: 30px;
+        color: #000000;
+        margin-bottom: 30px;
+        font-weight: bold;
+        text-align: center; /* ← ONLY THIS IS NEEDED */
+        letter-spacing: 0.5px;
+      }
+
+      .construction-text-section p {
+        font-family: "Google Sans", sans-serif;
+        font-size: 16px;
+        line-height: 1.7;
+        color: #333333;
+        margin-bottom: 25px;
+        text-align: justify;
+        font-weight: 100;
+        letter-spacing: 0.3px;
+      }
+
+      .construction-text-section p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* ============ PRODUCT SECTION ============ */
+      .product-section {
+        max-width: 1280px;
+        margin: 80px auto;
+        padding: 0 24px;
+      }
+
+      /* ============ EMPTY STATE MESSAGE ============ */
+      .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin: 40px 0;
+      }
+
+      .empty-state-icon {
+        font-size: 48px;
+        color: #6c757d;
+        margin-bottom: 20px;
+      }
+
+      .empty-state h3 {
+        font-size: 24px;
+        color: #343a40;
+        margin-bottom: 16px;
+      }
+
+      .empty-state p {
+        color: #6c757d;
+        max-width: 500px;
+        margin: 0 auto 30px;
+        line-height: 1.6;
+      }
+
+      /* ============ MOBILE NAVIGATION ============ */
+      .menu-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        transition: transform 0.3s ease;
+        display: none; /* Hidden by default */
+        background: none;
+        border: none;
+        color: var(--text-primary);
+        font-size: 24px;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 4px;
+      }
+
+      /* Show menu toggle on mobile */
+      @media (max-width: 768px) {
+        .menu-toggle {
+          display: block;
+        }
+
+        /* When nav is hidden, also hide menu toggle */
+        nav.nav-hidden ~ .menu-toggle {
+          transform: translateY(-100px);
+        }
+
+        /* When nav is visible, show menu toggle */
+        nav:not(.nav-hidden) ~ .menu-toggle {
+          transform: translateY(0);
+        }
+      }
+
+      .mobile-nav {
+        position: fixed;
+        top: 0;
+        right: -300px;
+        width: 300px;
+        height: 100vh;
+        background: #ffffff;
+        z-index: 1000;
+        padding: 80px 30px 30px 30px;
+        transition: right 0.3s ease;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        border-left: 1px solid var(--border-light);
+      }
+
+      .mobile-nav.active {
+        right: 0;
+      }
+
+      .mobile-nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .mobile-nav-link {
+        font-size: 14px;
+        font-weight: bold;
+        letter-spacing: 0.2em;
+        color: var(--text-primary);
+        text-transform: uppercase;
+        text-decoration: none;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border-light);
+        transition: color 0.3s ease;
+      }
+
+      .mobile-nav-link:hover,
+      .mobile-nav-link.active {
+        color: var(--primary);
+      }
+
+      .mobile-nav-icons {
+        margin-top: 30px;
+        display: flex;
+        gap: 15px;
+      }
+
+      .close-menu {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: none;
+        color: var(--text-primary);
+        font-size: 24px;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .close-menu:hover {
+        color: var(--primary);
+      }
+
+      /* ============ RESPONSIVE STYLES ============ */
+      @media (max-width: 768px) {
+        .nav-right {
+          display: none;
+        }
+
+        .guide-hero {
+          height: 80vh;
+        }
+
+        .guide-title {
+          font-size: 48px;
+        }
+
+        .construction-text-section {
+          margin: 60px auto;
+          padding: 0 16px !important;
+        }
+
+        .construction-text-section h2 {
+          font-size: 28px;
+          margin-bottom: 20px;
+        }
+
+        .construction-text-section p {
+          font-size: 16px;
+          line-height: 1.7;
+        }
+
+        .product-section {
+          margin: 40px auto;
+          padding: 0 16px;
+        }
+
+        /* Mobile slider styles */
+        #infinitePrevBtn,
+        #infiniteNextBtn {
+          display: none !important;
+        }
+
+        /* SLIDER CONTAINER */
+        .construction-text-section > div:nth-last-of-type(2) {
+          margin: 30px 0 !important;
+          padding: 0 !important;
+          width: 100% !important;
+        }
+
+        /* SLIDER FOR MOBILE - SHOW 2 IMAGES */
+        #infiniteSlider {
+          display: flex !important;
+          gap: 10px !important;
+          flex-wrap: nowrap !important;
+          overflow-x: auto !important;
+          scroll-behavior: smooth !important;
+          -webkit-overflow-scrolling: touch !important;
+          padding-bottom: 10px !important;
+        }
+
+        #infiniteSlider > div {
+          flex: 0 0 calc(50% - 5px) !important;
+          min-width: calc(50% - 5px) !important;
+          max-width: calc(50% - 5px) !important;
+        }
+
+        #infiniteSlider img {
+          height: 180px !important;
+          width: 100% !important;
+        }
+
+        /* Hide scrollbar for cleaner look */
+        #infiniteSlider::-webkit-scrollbar {
+          display: none;
+        }
+
+        #infiniteSlider {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      }
+
+      @media (min-width: 769px) {
+        .nav-right {
+          display: flex !important;
+        }
+
+        .mobile-nav {
+          display: none !important;
+        }
+
+        .menu-toggle {
+          display: none !important;
+        }
+      }
+
+      /* ============ UNIFIED MOBILE PADDING & ALIGNMENT ============ */
+      @media (max-width: 768px) {
+        /* Force ALL sections to have exact same 20px padding */
+        main > section:not(.guide-hero),
+        .construction-text-section,
+        .construction-text-section + section {
+          padding-left: 20px !important;
+          padding-right: 20px !important;
+          width: 100% !important;
+          box-sizing: border-box !important;
+          margin-left: 0 !important;
+          margin-right: 0 !important;
+        }
+
+        /* Text section specific */
+        .construction-text-section {
+          padding: 0 20px !important;
+          margin: 40px 0 !important;
+        }
+
+        /* Text alignment */
+        .construction-text-section h2 {
+          text-align: center !important;
+          padding: 0 !important;
+          margin: 0 0 20px 0 !important;
+        }
+
+        .construction-text-section p {
+          text-align: justify !important;
+          padding: 0 !important;
+          margin: 0 0 20px 0 !important;
+        }
+
+        /* YouTube video section - align with text */
+        .construction-text-section + section {
+          padding: 0 20px !important;
+          margin: 40px 0 !important;
+          width: 100% !important;
+        }
+
+        /* YouTube video container */
+        .construction-text-section + section > div {
+          width: 100% !important;
+          max-width: 100% !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+
+        /* 3D Printing section */
+        .construction-text-section + section + section {
+          padding: 0 !important;
+          margin: 40px 0 !important;
+          width: 100% !important;
+        }
+
+        .construction-text-section + section + section > div {
+          padding-left: 20px !important;
+          padding-right: 20px !important;
+        }
+
+        /* Remove any overflow issues */
+        body,
+        main {
+          overflow-x: hidden !important;
+          max-width: 100% !important;
+        }
+
+        /* Ensure no element exceeds viewport */
+        * {
+          max-width: 100% !important;
+        }
+      }
+
+      /* ============ KEEP SUBSCRIBE BUTTON SIZE FIXED ============ */
+      @media (max-width: 768px) {
+        /* Keep button at original size */
+        #subscribeBtn {
+          width: auto !important;
+          max-width: none !important;
+          padding: 10px 40px !important;
+          display: inline-flex !important;
+          margin: 30px auto !important;
+        }
+
+        /* Button container - keep centered */
+        .construction-text-section > div:last-of-type {
+          text-align: center !important;
+        }
+      }
+
+      /* ============ TEXT SELECTION STYLE ============ */
+      ::selection {
+        background-color: rgba(16, 185, 129, 0.2);
+      }
+
+      /* ============ CUSTOM SCROLLBAR ============ */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--background-light);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--border-light);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--text-muted);
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-container">
+        <div class="nav-left">
+          <a href="index.html"
+            ><img src="images/logo.png" alt="JS Makers" class="logo-image"
+          /></a>
+        </div>
+        <div class="nav-right">
+          <a class="nav-link" href="index.html">Home</a>
+          <a class="nav-link active" href="robotic arm.html">Robotic Arm</a>
+          <a class="nav-link" href="Resources.html">Resources</a>
+          <a class="nav-link" href="Account.html">Account</a>
+          <div class="nav-icons">
+            <button class="icon-btn cart-badge icon-cart">
+              <span class="badge">1</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <button class="menu-toggle" id="menuToggle">☰</button>
+
+    <div class="mobile-nav" id="mobileNav">
+      <button class="close-menu" id="closeMenu">✕</button>
+
+      <div class="mobile-nav-links">
+        <a class="mobile-nav-link" href="index.html">Home</a>
+        <a class="mobile-nav-link active" href="robotic-arm.html"
+          >Robotic Arm</a
+        >
+        <a class="mobile-nav-link" href="Resources.html">Resources</a>
+        <a class="mobile-nav-link" href="Account.html">Account</a>
+      </div>
+
+      <div class="mobile-nav-icons">
+        <button class="icon-btn cart-badge icon-cart">
+          <span class="badge">1</span>
+        </button>
+      </div>
+    </div>
+
+    <main>
+      <!================     HERO SECTION     ================-->
+      <section class="guide-hero">
+        <video autoplay muted loop playsinline>
+          <source src="videos/robotic-arm-video.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <div class="guide-hero-content">
+          <h1 class="guide-title">Robotic Arm<br /></h1>
+          <p class="guide-subtitle">RESOURCES</p>
+        </div>
+      </section>
+
+      <!------------  CONSTRUCTION GUIDE TEXT SECTION ---------------->
+      <section class="construction-text-section">
+        <h2>Construction Guide</h2>
+        <p>
+          The DKS-Pro is a personal project, a 4-wheel drive radio-controlled
+          chassis designed for 3D printing. It has the same proportions as the
+          DKS-Basic, so this chassis is also compatible with all the bodies
+          you'll find among my designs. On this page, you'll find all the
+          information and everything you need to build and replicate the project
+          yourself. You'll find links to STL files, electronic components,
+          filament, instructions, and videos of the process. Don't forget to
+          subscribe to my YouTube channel—it's free! And if you like this or any
+          of my other projects, please feel free to share it. Thank you, and I
+          hope you enjoy it.
+        </p>
+
+        <div style="text-align: center; margin-top: 40px">
+          <button
+            id="subscribeBtn"
+            style="
+              background: #000000;
+              color: white;
+              border: none;
+              padding: 10px 80px;
+              font-family: &quot;Google Sans&quot;, sans-serif;
+              font-size: 14px;
+              cursor: pointer;
+              transition: all 0.3s ease;
+              display: inline-flex;
+              align-items: center;
+              gap: 12px;
+            "
+          >
+            <span style="font-size: 24px">🎬</span>
+            SUBSCRIBE
+          </button>
+          <p
+            style="
+              font-family: &quot;Science Gothic&quot;, sans-serif;
+              color: #666;
+              margin-top: 15px;
+              font-size: 14px;
+            "
+          ></p>
+        </div>
+
+        <!---------   SLIDER - NO BACKGROUND, MINIMAL GAPS ----------->
+        <div style="width: 100%; margin: 30px 0 0 0; position: relative">
+          <button
+            id="infinitePrevBtn"
+            style="
+              position: absolute;
+              top: 50%;
+              left: -60px;
+              transform: translateY(-50%);
+              background: #ffffff;
+              color: rgb(185, 185, 185);
+              border: none;
+              width: 45px;
+              height: 45px;
+              cursor: pointer;
+              font-size: 22px;
+              z-index: 100;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              transition: all 0.3s ease;
+              border-radius: 50%;
+            "
+          >
+            ‹
+          </button>
+
+          <div style="position: relative; width: 100%">
+            <div style="width: 100%; overflow: hidden">
+              <div
+                id="infiniteSlider"
+                style="
+                  display: flex;
+                  transition: transform 0.8s ease;
+                  gap: 20px;
+                "
+              ></div>
+            </div>
+          </div>
+
+          <button
+            id="infiniteNextBtn"
+            style="
+              position: absolute;
+              top: 50%;
+              right: -60px;
+              transform: translateY(-50%);
+              background: #ffffff;
+              color: rgb(185, 185, 185);
+              border: none;
+              width: 45px;
+              height: 45px;
+              cursor: pointer;
+              font-size: 22px;
+              z-index: 100;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              transition: all 0.3s ease;
+              border-radius: 50%;
+            "
+          >
+            ›
+          </button>
+        </div>
+      </section>
+
+      <!================     YOUTUBE VIDEO SECTION     ================-->
+      <section style="width: 100%; margin: 40px 0; padding: 0 80px">
+        <div
+          style="
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            background: #000;
+            overflow: hidden;
+          "
+        >
+          <div style="position: relative; padding-bottom: 56.25%; height: 0">
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/kPQDbivEZ64?si=R5PqLLeb9_OFhvJy"
+              title="YouTube video player"
+              frameborder="0"
+              allow="
+                accelerometer;
+                autoplay;
+                clipboard-write;
+                encrypted-media;
+                gyroscope;
+                picture-in-picture;
+                web-share;
+              "
+              referrerpolicy="strict-origin-when-cross-origin"
+              style="
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+              "
+              allowfullscreen
+            >
+            </iframe>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 3D PRINTING SETTINGS & COMPONENTS SECTION ============ -->
+      <section style="width: 100%; margin: 80px 0; padding: 0">
+        <div style="padding: 80px 0; width: 100%; background: #f8f8f8">
+          <div style="max-width: 1400px; margin: 0 auto; padding: 0 80px">
+            <h2
+              style="
+                font-family: &quot;Google Sans&quot;, sans-serif;
+                font-size: 30px;
+                color: #000000;
+                margin-bottom: 40px;
+                font-weight: bold;
+                text-align: center;
+                letter-spacing: 0.5px;
+              "
+            >
+              3D Printing Settings & Required Materials
+            </h2>
+
+            <div style="margin-bottom: 60px">
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 20px;
+                  text-align: justify;
+                "
+              >
+                These are the settings I used, but some parameters depend on the
+                type of material you use. For this project, it's highly
+                recommended that you use the same materials I did; the car's
+                performance depends heavily on their quality and type. You'll
+                find all the filaments I used further down this page. All files
+                are already positioned for printing, meaning they will print in
+                their optimal orientation when you import them into your
+                laminator. In the downloaded files, you'll find each piece
+                individually on one side and organized into groups on the other.
+                I recommend printing the grouped files and keeping the
+                individual files for printing any replacement parts for the car.
+                No supports are needed for any of the pieces. This project is
+                divided into two types of parts: rigid and flexible. For the
+                rigid parts, I recommend using two materials. Most of the parts
+                can be printed in PLA, but I recommend printing the mechanical
+                components in a more resistant material. I recommend materials
+                like ASA, PC, or ABS. I've used ASA and it's worked great, but I
+                think PC would be even better, as it withstands heat even
+                better. The problem is that it's more expensive. The flexible
+                parts will be printed in TPU Foamy. It's a foam material that
+                works great for printing tires. I've used it for both the tires
+                and the bumpers. It's important that you use the same parameters
+                I used. The strength of the parts depends heavily on these
+                parameters. If you use different materials, I recommend doing
+                some testing.
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 20px;
+                  text-align: justify;
+                "
+              >
+                <strong>PLA:</strong> We will need approximately 40 hours of
+                printing time and 560g of PLA (you can also use PETG or any
+                rigid material). The parts to print in this material are: 1, 3,
+                5, 6, 7, 8, 9, 10, 11, 12, 13, 14, and 15.
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 20px;
+                  text-align: justify;
+                "
+              >
+                <strong>ASA:</strong> We will need about 12 hours of printing
+                time and 130g of ASA (you can also use PC or ABS or any material
+                that withstands high temperatures and has mechanical strength).
+                The parts printed in this material are: Print 2 and 4.
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 20px;
+                  text-align: justify;
+                "
+              >
+                <strong>Flex:</strong> We'll need about 25 hours of printing
+                time and 60g of TPU Foamy (you can also use regular TPU). The
+                parts printed with this material are: Print 16, 17, and 18.
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  text-align: justify;
+                "
+              >
+                <strong>Print area:</strong> The largest piece measures
+                135x188mm so you will need a print bed at least that size.
+              </p>
+            </div>
+
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+                align-items: start;
+              "
+            >
+              <div>
+                <h3
+                  style="
+                    font-family: &quot;Google Sans&quot;, sans-serif;
+                    font-size: 24px;
+                    color: #000000;
+                    margin-bottom: 20px;
+                    font-weight: 600;
+                  "
+                >
+                  Required Components
+                </h3>
+
+                <div style="margin-bottom: 20px">
+                  <p
+                    style="
+                      font-family: &quot;Google Sans&quot;, sans-serif;
+                      font-size: 15px;
+                      line-height: 1.6;
+                      color: #333333;
+                    "
+                  >
+                    • X34 – M3 8mm Screw<br />
+                    • X10 – M3 10mm Screw<br />
+                    • X58 – M3 12mm Screw<br />
+                    • X16 – M3 16mm Screw<br />
+                    • X14 – M3 20mm Screw<br />
+                    • X10 – M3 30mm Screw<br />
+                    • X4 – M3 40mm Screw<br />
+                    • X4 – M3 50mm Screw<br />
+                    • X8 – M3 12mm Countersunk Head Screw<br />
+                    • X1 – M4 6mm Screw<br />
+                    • X45 – M3 Nuts<br />
+                    • X30 – M3 Self-locking Nut<br />
+                    • X20 – Bearing 12x18x4mm<br />
+                    • X1 – 3.17mm hexagonal adapter<br />
+                    • X4 – Springs 1.2x16x40<br />
+                    • X8 – 12×5-4 (or 12×3-4) magnets<br />
+                    • X4 – RC Tires 1:10<br />
+                    • 70XL 6mm Strap<br />
+                    • Engine<br />
+                    • Variable speed drive<br />
+                    • Servo<br />
+                    • Battery<br />
+                    • Radio Station
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <div
+                  style="
+                    width: 100%;
+                    max-width: 500px;
+                    height: 400px;
+                    background: #e0e0e0;
+                    border-radius: 0px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="images/component side image.jpg"
+                    alt="Component Image"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+
+                <p
+                  style="
+                    font-family: &quot;Google Sans&quot;, sans-serif;
+                    font-size: 14px;
+                    color: #666;
+                    text-align: center;
+                    margin-top: 15px;
+                  "
+                ></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <style>
+        /* ============ MOBILE STYLES FOR 3D PRINTING SECTION ============ */
+        @media (max-width: 768px) {
+          .construction-text-section + section + section {
+            margin: 40px 0 !important;
+            padding: 80px !important;
+            width: 100% !important;
+            background: #f8f8f8 !important;
+          }
+
+          .construction-text-section + section + section > div,
+          .construction-text-section + section + section > div > div,
+          .construction-text-section + section + section > div > div > div {
+            padding: 20px !important;
+            margin: 0 !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            background: transparent !important;
+          }
+
+          .construction-text-section + section + section > div > div {
+            padding: 40px 5% !important;
+          }
+
+          .construction-text-section + section + section h2 {
+            font-size: 24px !important;
+            margin-bottom: 30px !important;
+            padding: 0 0 !important;
+            text-align: center !important;
+            line-height: 1.3 !important;
+            width: 100% !important;
+          }
+
+          .construction-text-section + section + section p {
+            font-size: 17px !important;
+            line-height: 1.8 !important;
+            margin-bottom: 25px !important;
+            padding: 0 !important;
+            text-align: justify !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            letter-spacing: 0.1px !important;
+          }
+
+          .construction-text-section + section + section p strong {
+            font-size: 18px !important;
+            display: inline-block;
+            margin-right: 5px;
+          }
+
+          .construction-text-section
+            + section
+            + section
+            > div
+            > div
+            > div[style*="grid-template-columns"] {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 40px !important;
+            width: 100% !important;
+            padding: 20px !important;
+            margin: 30px 0 0 0 !important;
+          }
+
+          .construction-text-section
+            + section
+            + section
+            > div
+            > div
+            > div[style*="grid-template-columns"]
+            > div {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+
+          .construction-text-section
+            + section
+            + section
+            > div
+            > div
+            > div[style*="grid-template-columns"]
+            > div:last-child {
+            margin-top: 20px !important;
+            width: 100% !important;
+          }
+
+          .construction-text-section
+            + section
+            + section
+            > div
+            > div
+            > div[style*="grid-template-columns"]
+            > div:last-child
+            > div {
+            height: 250px !important;
+            width: 100% !important;
+          }
+
+          .construction-text-section
+            + section
+            + section
+            > div
+            > div
+            > div[style*="grid-template-columns"]
+            > div:first-child
+            p {
+            font-size: 16px !important;
+            line-height: 1.9 !important;
+            padding: 0 !important;
+            margin: 0 0 15px 0 !important;
+          }
+        }
+      </style>
+
+      <!-- ============ FILAMENT SECTION ============ -->
+      <section
+        class="full-width-section"
+        style="width: 100%; margin: 0px 0; padding: 0; background: #f8f8f8"
+      >
+        <div style="padding: 60px 0; width: 100%">
+          <div style="max-width: 1400px; margin: 0 auto; padding: 0 10px">
+            <h2
+              style="
+                font-family: &quot;Google Sans&quot;, sans-serif;
+                font-size: 40px;
+                color: #000000;
+                margin-bottom: 40px;
+                font-weight: bold;
+                text-align: center;
+                letter-spacing: 0.5px;
+                padding: 0 10px;
+              "
+            >
+              Filament
+            </h2>
+
+            <div style="margin-bottom: 60px; padding: 0 20px">
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 20px;
+                  text-align: justify;
+                  max-width: none;
+                  width: 100%;
+                "
+              >
+                This project uses three types of filament or material; here are
+                the ones I used. It's recommended to use the same or similar
+                ones, but if you use others, make sure they meet the necessary
+                requirements, especially for the mechanical parts. The part that
+                supports the motor must withstand high temperatures like those
+                found in ASA, otherwise it could warp.
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 20px;
+                  text-align: justify;
+                  max-width: none;
+                  width: 100%;
+                "
+              >
+                You can print PLA parts in PETG or any other material if you
+                want extra strength, but PLA is sufficient. For ASA parts, you
+                can use ABS or PC, for example. PC (polycarbonate) is the best;
+                it withstands even higher temperatures than ASA and is more
+                mechanically resistant, but it's more expensive. It works great
+                with ASA. As for TPU, I've used TPU Foamy, a special TPU that
+                expands with heat, so it prints at a lower flow rate. The finish
+                is matte, and when used in tires, it provides excellent grip; it
+                works great. However, if you prefer, you can use any other TPU.
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 20px;
+                  text-align: justify;
+                  max-width: none;
+                  width: 100%;
+                "
+              >
+                In this guide, I'll show you how to use ASA on the gearbox and
+                differentials, and that's sufficient. But it would be great to
+                use ASA on all the mechanical parts. Alternatively, you can do
+                what I did in the video. I only used ASA on the gearbox. The
+                part that supports the motor is the only one that absolutely
+                must be printed in a heat-resistant material, since the motor
+                gets hot and could warp it if it's printed in PLA, PETG, or
+                similar materials.
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  text-align: justify;
+                  max-width: none;
+                  width: 100%;
+                "
+              >
+                This is a very mechanically demanding project; both the quality
+                of the materials and the print quality affect the car's
+                performance. Even so, be prepared to break and replace parts.
+                This car is a beast!
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <style>
+        /* ============ MOBILE STYLES FOR FILAMENT SECTION ============ */
+        @media (max-width: 768px) {
+          .full-width-section {
+            width: 100vw !important;
+            margin-left: calc(-50vw + 50%) !important;
+            margin-right: calc(-50vw + 50%) !important;
+            position: relative !important;
+            left: 0 !important;
+            right: 0 !important;
+            padding: 40px 0 !important;
+            margin: 40px 0 !important;
+            background: #f8f8f8 !important;
+            box-sizing: border-box !important;
+          }
+
+          .full-width-section > div {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+
+          .full-width-section > div > div {
+            width: 100% !important;
+            padding: 0 15px !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
+          }
+
+          .full-width-section h2,
+          .full-width-section p,
+          .full-width-section > div > div > div,
+          .full-width-section > div > div > div > div,
+          .full-width-section > div > div > div > div > div {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+
+          .full-width-section h2 {
+            font-size: 26px !important;
+            margin-bottom: 30px !important;
+            text-align: center !important;
+          }
+
+          .full-width-section p {
+            font-size: 17px !important;
+            line-height: 1.9 !important;
+            margin-bottom: 25px !important;
+            text-align: justify !important;
+          }
+        }
+
+        .construction-text-section + section + section {
+          width: 100vw !important;
+          margin-left: calc(-50vw + 50%) !important;
+          margin-right: calc(-50vw + 50%) !important;
+          position: relative !important;
+          left: 0 !important;
+          right: 0 !important;
+          padding: 40px 0 !important;
+          margin: 40px 0 !important;
+          background: #f8f8f8 !important;
+          box-sizing: border-box !important;
+        }
+
+        .construction-text-section + section + section > div {
+          width: 100% !important;
+          max-width: 100% !important;
+          padding: 0 !important;
+          margin: 0 !important;
+        }
+
+        .construction-text-section + section + section > div > div {
+          width: 100% !important;
+          padding: 0 15px !important;
+          margin: 0 auto !important;
+          box-sizing: border-box !important;
+        }
+      </style>
+
+      <!-- ==============================================     MOUNTING SECTION    ===================================================================== -->
+      <section
+        class="mounting-section"
+        style="width: 100%; margin: 40px 0; padding: 0"
+      >
+        <div style="width: 100%; margin: 0 auto; padding: 0 80px">
+          <h2
+            style="
+              font-family: &quot;Google Sans&quot;, sans-serif;
+              font-size: 40px;
+              color: #000000;
+              margin-bottom: 40px;
+              font-weight: bold;
+              text-align: center;
+              letter-spacing: 0.5px;
+              padding: 0 10px;
+            "
+          >
+            Mounting
+          </h2>
+
+          <div style="padding: 0 10px">
+            <p
+              style="
+                font-family: &quot;Google Sans&quot;, sans-serif;
+                font-size: 18px;
+                line-height: 1.7;
+                color: #333333;
+                margin-bottom: 20px;
+                text-align: justify;
+                max-width: none;
+                width: 100%;
+              "
+            >
+              Here's a step-by-step guide to the assembly. For each step, I'll
+              tell you the number of screws, the components, and the tools
+              you'll need. Get your tools ready and let's begin.
+            </p>
+          </div>
+
+          <div style="margin: 40px 0; padding: 0 10px">
+            <div
+              style="
+                width: 100%;
+                margin: 0 auto;
+                background: #f0f0f0;
+                border-radius: 4px;
+                overflow: hidden;
+              "
+            >
+              <img
+                src="images/mounting-guide.jpg"
+                alt="Mounting Guide"
+                style="width: 100%; height: auto; display: block"
+              />
+            </div>
+          </div>
+
+          <!-- Step 1 Content -->
+          <div style="padding: 0 10px; margin-top: 40px">
+            <h3
+              style="
+                font-family: &quot;Google Sans&quot;, sans-serif;
+                font-size: 24px;
+                color: #000000;
+                margin-bottom: 30px;
+                font-weight: bold;
+                letter-spacing: 0.5px;
+                line-height: 1.8;
+              "
+            >
+              <div style="font-size: 28px; margin-bottom: 0px">Step 1:</div>
+              <div style="font-size: 17px">GEARBOX</div>
+            </h3>
+
+            <div style="margin-bottom: 40px">
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 20px;
+                "
+              >
+                <strong>Components:</strong> 4 M3 8mm screws, 5 M3 12mm screws,
+                3 M3 nuts, 1 M4 6mm screw, 2 12x18x4mm bearings, 70XL belt,
+                hexagonal coupling and motor.
+              </p>
+
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(1, 1fr);
+                  gap: 15px;
+                  margin: 20px 0;
+                "
+              >
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/gearbox1.jpg"
+                    alt="Gearbox Part 1"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/gearbox2.jpg"
+                    alt="Gearbox Part 2"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/gearbox3.jpg"
+                    alt="Gearbox Part 3"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/gearbox4.jpg"
+                    alt="Gearbox Part 4"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+              </div>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 15px;
+                "
+              >
+                <strong>Printed parts:</strong>
+                "Print-02_DKS-Pro_DukeDoks_Gearbox".
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 15px;
+                "
+              >
+                The first step is to assemble the large gear. To do this, insert
+                the two halves of the shaft through the center of the gear and
+                secure it with four 8mm M3 screws. Finally, to complete the
+                assembly, place a bearing on each side of the shaft.
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 15px;
+                "
+              >
+                Next, we screw the motor to the housing with two 12mm M3 screws.
+                Then we place the hexagonal coupling on the motor shaft. Don't
+                tighten the set screws yet so you can align the two gears later.
+                We put the small gear with the belt onto the hexagonal coupling
+                and secure it with the 6mm M4 screw.
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                "
+              >
+                Now we place the gear in position, wrapping it with the belt,
+                aligning the two gears properly, and tightening the set screws
+                of the hexagonal coupling through the opening in the housing.
+                Finally, we close the housing with three 12mm M3 screws and
+                three nuts.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 2 Content -->
+          <div style="padding: 0 0px; margin-top: 60px">
+            <h3
+              style="
+                font-family: &quot;Google Sans&quot;, sans-serif;
+                font-size: 24px;
+                color: #000000;
+                margin-bottom: 30px;
+                font-weight: bold;
+                letter-spacing: 0.5px;
+                line-height: 1.8;
+              "
+            >
+              <div style="font-size: 28px; margin-bottom: 5px">Step 2:</div>
+              <div style="font-size: 17px">DIFFERENTIAL</div>
+            </h3>
+
+            <div style="margin-bottom: 40px">
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 20px;
+                  text-align: justify;
+                "
+              >
+                <strong>Components:</strong> 6 M3 12mm screws, 4 M3 nuts, 4
+                12x18x4mm bearings, differential gears, output shafts.
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 15px;
+                  text-align: justify;
+                "
+              >
+                Printed parts: X2 "Print-04_DKS-Pro_DukeDoks_Differential"
+                Finally, to complete the assembly, place a bearing on each side
+                of the shaft.
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 15px;
+                  text-align: justify;
+                "
+              >
+                First, we'll assemble the core. Screw the three small gears to
+                the central core using three 12mm M3 screws. These gears should
+                rotate freely; if not, you can re-drill the hole with a 3mm
+                drill bit.
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 15px;
+                  text-align: justify;
+                "
+              >
+                Next, we placed a bearing in one of the differential halves and
+                positioned one of the small gears in the center. Then, we put
+                the hub we assembled earlier into place. The screw heads should
+                fit into the designated slots. You might need to loosen the
+                screws half a turn for them to fit. Take this opportunity to add
+                some grease, ensuring all the gears are coated to minimize wear
+                on the teeth.
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  text-align: justify;
+                "
+              >
+                Finally, to finish the differential, we assemble the four cup
+                halves using four 16mm M3 bolts. We place one bearing and one
+                spacer ring between each cup and the differential. This is also
+                a good time to install a self-locking nut on two of the cup
+                halves—the two with the hexagonal opening, not the round one.
+                Next, we assembled the pinion gear. We joined the two halves of
+                the shaft to the gear and secured it with a 12mm M3 screw. We
+                finished the assembly by placing a bearing on the shaft. The
+                screw makes the joint between the printed parts solid and
+                prevents play, but it wouldn't hurt to add a little glue for
+                extra strength.
+              </p>
+
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(1, 1fr);
+                  gap: 15px;
+                  margin: 20px 0;
+                "
+              >
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/diff1.jpg"
+                    alt="Differential Part 1"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/diff2.jpg"
+                    alt="Differential Part 2"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/diff3.jpg"
+                    alt="Differential Part 3"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/diff4.jpg"
+                    alt="Differential Part 4"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 Content -->
+          <div style="padding: 0 10px; margin-top: 60px">
+            <h3
+              style="
+                font-family: &quot;Google Sans&quot;, sans-serif;
+                font-size: 24px;
+                color: #000000;
+                margin-bottom: 30px;
+                font-weight: bold;
+                letter-spacing: 0.5px;
+                line-height: 1.8;
+              "
+            >
+              <div style="font-size: 28px; margin-bottom: 5px">Step 3:</div>
+              <div style="font-size: 17px">CHASSIS</div>
+            </h3>
+
+            <div style="margin-bottom: 40px">
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 17px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 20px;
+                "
+              >
+                <strong>Components:</strong> 8 M3 16mm screws, 12 M3 nuts,
+                chassis plates, suspension mounts.
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 15px;
+                  text-align: justify;
+                "
+              >
+                We placed the three nuts in the holes in the lower half of the
+                gearbox. We mounted the differential and pinion inside. We added
+                some grease to the teeth of the differential and pinion to
+                minimize wear. Now we closed the assembly with the other half of
+                the gearbox and the three 12mm bolts. IMPORTANT: We will need
+                two assemblies like this. Repeat the steps to assemble another
+                one using the second differential we built in the previous step.
+                And make sure the differential ring gear is on the same side in
+                both assemblies, otherwise the front and rear wheels will turn
+                in opposite directions
+              </p>
+
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(1, 1fr);
+                  gap: 15px;
+                  margin: 20px 0;
+                "
+              >
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/chassis1.jpg"
+                    alt="Chassis Part 1"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/chassis2.jpg"
+                    alt="Chassis Part 2"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4 Content -->
+          <div style="padding: 0 10px; margin-top: 60px">
+            <h3
+              style="
+                font-family: &quot;Google Sans&quot;, sans-serif;
+                font-size: 24px;
+                color: #000000;
+                margin-bottom: 30px;
+                font-weight: bold;
+                letter-spacing: 0.5px;
+                line-height: 1.8;
+              "
+            >
+              <div style="font-size: 28px; margin-bottom: 5px">Step 4:</div>
+              <div style="font-size: 17px">FRONT ARMS</div>
+            </h3>
+
+            <div style="margin-bottom: 40px">
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 20px;
+                "
+              >
+                <strong>Components:</strong> 4 x 12mm M3 screws, 4 x 20mm M3
+                screws, 2 x 30mm M3 screws, 2 x 50mm M3 screws, 2 x M3 nuts, 10
+                x M3 self-locking nuts, and 4 x 12x18x4mm bearings
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 15px;
+                  text-align: justify;
+                "
+              >
+                Printed parts: "Print-05_DKS-Pro_DukeDoks_Front-Arms".
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 15px;
+                  text-align: justify;
+                "
+              >
+                We begin by placing the ball joints into their respective holes
+                in the arms, paying close attention to their orientation. They
+                are pressed into the slots; you can use pliers, a clamp, or
+                something similar to help. It's advisable to add a little grease
+                to facilitate movement. Now we attach the brackets to the arms
+                with four 12mm screws and four self-locking nuts. Tighten the
+                screws securely so they don't move; the ball joints are what
+                actually allow the movement.
+              </p>
+
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 15px;
+                  text-align: justify;
+                "
+              >
+                Next, attach the drive shafts to the differential with two 20mm
+                M3 bolts. Remember that in a previous step, we placed two
+                self-locking nuts in two of the differential's holes. Do the
+                same by joining the two halves of each wheel axle with a 20mm M3
+                bolt and a self-locking nut, placing an M3 nut inside each axle.
+                <br /><br />
+                Now place two bearings in each of the supports, one on each
+                side, and insert the shafts through the center. Finish the
+                assembly by attaching the two hexagonal couplings.
+                <br /><br />
+                Finally, we completed the assembly by attaching the four arms to
+                the differential housing. For this, we used four self-locking
+                nuts, two 30mm M3 bolts at the top, and two 50mm M3 bolts at the
+                bottom.
+                <br /><br />
+                Check that everything rotates and moves smoothly. This block
+                should allow the car's steering to turn, it should move freely
+                up and down for suspension play, and the mechanism should turn
+                the wheels.
+              </p>
+
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(1, 1fr);
+                  gap: 15px;
+                  margin: 20px 0;
+                "
+              >
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/suspension1.jpg"
+                    alt="Suspension Part 1"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/suspension2.jpg"
+                    alt="Suspension Part 2"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/suspension3.jpg"
+                    alt="Suspension Part 3"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/suspension4.jpg"
+                    alt="Suspension Part 4"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 5 Content -->
+          <div style="padding: 0 10px; margin-top: 60px">
+            <h3
+              style="
+                font-family: &quot;Google Sans&quot;, sans-serif;
+                font-size: 24px;
+                color: #000000;
+                margin-bottom: 30px;
+                font-weight: bold;
+                letter-spacing: 0.5px;
+                line-height: 1.8;
+              "
+            >
+              <div style="font-size: 28px; margin-bottom: 5px">Step 5:</div>
+              <div style="font-size: 17px">REAR ARMS</div>
+            </h3>
+
+            <div style="margin-bottom: 40px">
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 16px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 20px;
+                "
+              >
+                <strong>Components:</strong> ESC, receiver, servo, battery,
+                wiring, 6 M3 8mm screws. Printed parts:
+                "Print-06_DKS-Pro_DukeDoks_Rear-Arms". <br /><br />
+                Now it's time for the rear control arms. This step is very
+                similar to the previous one. We start by joining the two halves
+                of the brackets with two 12mm bolts; these pieces will later
+                house the bearings. Next, we attach the control arms to these
+                pieces with four 30mm M3 bolts and four self-locking nuts.
+                <br /><br />
+                Now we assemble the drive shafts as in the previous step. Attach
+                the drive shafts to the differential with two 20mm M3 bolts.
+                Remember that in a previous step we placed two self-locking nuts
+                in two of the differential's holes. Do the same by joining the
+                two halves of each wheel axle with a 20mm M3 bolt and a
+                self-locking nut, placing an M3 nut inside each axle.
+                <br /><br />
+                Now place two bearings in each of the supports, one on each
+                side, and insert the shafts through the center. Finish the
+                assembly by attaching the two hexagonal couplings.
+                <br /><br />
+                Finally, we completed the assembly by attaching the four arms to
+                the differential housing. For this, we used four self-locking
+                nuts, two 30mm M3 bolts at the top, and two 50mm M3 bolts at the
+                bottom.
+                <br /><br />
+                Check that everything rotates and moves smoothly. This block
+                should allow free up-and-down movement for the suspension and
+                the mechanism should rotate the differential and therefore the
+                wheels.
+              </p>
+
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(1, 1fr);
+                  gap: 15px;
+                  margin: 20px 0;
+                "
+              >
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/rear arm1.jpg"
+                    alt="Rear Arm Part 1"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/rear arm2.jpg"
+                    alt="Rear Arm Part 2"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/rear arm3.jpg"
+                    alt="Rear Arm Part 3"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+
+                <div
+                  style="
+                    background: #f0f0f0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <img
+                    src="assembly/rear arm4.jpg"
+                    alt="Rear Arm Part 4"
+                    style="width: 100%; height: 100%; object-fit: cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 6 Content -->
+          <div style="padding: 0 10px; margin-top: 60px">
+            <h3
+              style="
+                font-family: &quot;Google Sans&quot;, sans-serif;
+                font-size: 24px;
+                color: #000000;
+                margin-bottom: 30px;
+                font-weight: bold;
+                letter-spacing: 0.5px;
+                line-height: 1.8;
+                text-align: center;
+              "
+            >
+              <div style="font-size: 28px; margin-bottom: 5px">
+                FINAL PRODUCT
+              </div>
+            </h3>
+
+            <div style="margin-bottom: 40px; text-align: center">
+              <p
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 18px;
+                  line-height: 1.7;
+                  color: #333333;
+                  margin-bottom: 30px;
+                  text-align: center;
+                "
+              >
+                Congratulations! Your DKS-Pro assembly is complete. Test all
+                functions and enjoy your creation!
+              </p>
+
+              <div
+                style="
+                  width: 100%;
+                  max-width: 800px;
+                  margin: 0 auto;
+                  background: #f0f0f0;
+                  border-radius: 4px;
+                  overflow: hidden;
+                "
+              >
+                <img
+                  src="assembly/final-product.jpg"
+                  alt="Final Product"
+                  style="width: 100%; height: auto; display: block"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <style>
+        /* ============ MOBILE STYLES FOR MOUNTING SECTION ============ */
+        @media (max-width: 768px) {
+          .mounting-section {
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 20px 0 !important;
+          }
+
+          .mounting-section > div {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 5px !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+          }
+
+          .mounting-section > div > div,
+          .mounting-section > div > div > div,
+          .mounting-section > div > div > div > div {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+
+          .mounting-section > div > div > div[style*="padding: 0 10px"],
+          .mounting-section > div > div > div[style*="padding: 0 0px"] {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            width: 100% !important;
+          }
+
+          .mounting-section h2 {
+            font-size: 24px !important;
+            margin-bottom: 25px !important;
+            text-align: center !important;
+            padding: 0 !important;
+            width: 100% !important;
+          }
+
+          .mounting-section h3 {
+            font-size: 20px !important;
+            margin-bottom: 20px !important;
+            padding: 0 !important;
+            width: 100% !important;
+          }
+
+          .mounting-section p {
+            font-size: 16px !important;
+            line-height: 1.8 !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+            padding: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            letter-spacing: 0.1px !important;
+            word-spacing: 0.5px !important;
+          }
+
+          .mounting-section p[style*="text-align: justify"] {
+            text-align: left !important;
+          }
+
+          .mounting-section > div > div > div[style*="margin-top: 60px"],
+          .mounting-section > div > div > div[style*="margin-top: 40px"] {
+            margin-top: 25px !important;
+            padding: 0 !important;
+          }
+
+          .mounting-section
+            > div
+            > div
+            > div[style*="grid-template-columns: repeat(1, 1fr)"] {
+            gap: 10px !important;
+            margin: 15px 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+          }
+
+          .mounting-section
+            > div
+            > div
+            > div[style*="grid-template-columns: repeat(1, 1fr)"]
+            > div {
+            height: 200px !important;
+            border-radius: 0 !important;
+            margin: 0 !important;
+            width: 100% !important;
+          }
+
+          .mounting-section > div > div > div[style*="margin: 40px 0"] {
+            margin: 20px 0 !important;
+            padding: 0 !important;
+          }
+
+          .mounting-section > div > div > div[style*="margin: 40px 0"] > div {
+            border-radius: 0 !important;
+          }
+        }
+      </style>
+    </main>
+
+    <!-- ==============================================     FOOTER SECTION    ============================================================= -->
+    <footer
+      style="
+        background: #000000;
+        color: #ffffff;
+        padding: 20px 0 10px 0;
+        width: 100%;
+      "
+    >
+      <div
+        style="
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 40px;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          flex-wrap: wrap;
+        "
+      >
+        <div
+          style="
+            flex: 1;
+            min-width: 300px;
+            margin-bottom: 30px;
+            max-width: 500px;
+            margin-top: 30px;
+          "
+        >
+          <a
+            href="index.html"
+            style="display: inline-block; margin-bottom: 20px"
+          >
+            <img
+              src="images/logo.png"
+              alt="JS Makers"
+              style="height: 60px; width: auto; filter: brightness(0) invert(1)"
+            />
+          </a>
+          <!-- CHANGED: Added margin-top to move text down -->
+          <p
+            style="
+              font-family: &quot;Google Sans&quot;, sans-serif;
+              font-size: 14px;
+              color: #999999;
+              line-height: 1.6;
+              max-width: 400px;
+              margin-top: -10px;
+            "
+          >
+            Building the future of DIY robotics and 3D printing. detailed
+            guides, and community-driven innovation.
+          </p>
+        </div>
+
+        <div
+          style="
+            flex: 1;
+            min-width: 300px;
+            margin-bottom: 30px;
+            margin-left: auto;
+            text-align: right;
+          "
+        >
+          <div style="margin-bottom: 40px">
+            <h4
+              style="
+                font-family: &quot;Google Sans&quot;, sans-serif;
+                font-size: 16px;
+                color: #ffffff;
+                margin-bottom: 20px;
+                margin-top: 20px;
+                font-weight: bold;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+              "
+            >
+              Social Networks
+            </h4>
+            <!-- REAL SVG ICONS -->
+            <div
+              style="
+                display: flex;
+                gap: 20px;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+              "
+            >
+              <!-- YouTube -->
+              <a
+                href="https://youtube.com/@JS.MAKERS"
+                target="_blank"
+                style="
+                  color: #999;
+                  text-decoration: none;
+                  transition: all 0.3s ease;
+                "
+                onmouseover="
+                  this.style.color = '#FF0000';
+                  this.style.transform = 'translateY(-2px)';
+                "
+                onmouseout="
+                  this.style.color = '#999';
+                  this.style.transform = 'translateY(0)';
+                "
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"
+                  />
+                </svg>
+              </a>
+
+              <!-- Instagram -->
+              <a
+                href="https://instagram.com/jsmakers"
+                target="_blank"
+                style="
+                  color: #999;
+                  text-decoration: none;
+                  transition: all 0.3s ease;
+                "
+                onmouseover="
+                  this.style.color = '#E4405F';
+                  this.style.transform = 'translateY(-2px)';
+                "
+                onmouseout="
+                  this.style.color = '#999';
+                  this.style.transform = 'translateY(0)';
+                "
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                  />
+                </svg>
+              </a>
+
+              <!-- Twitter/X -->
+              <a
+                href="https://twitter.com/jsmakers"
+                target="_blank"
+                style="
+                  color: #999;
+                  text-decoration: none;
+                  transition: all 0.3s ease;
+                "
+                onmouseover="
+                  this.style.color = '#000000';
+                  this.style.transform = 'translateY(-2px)';
+                "
+                onmouseout="
+                  this.style.color = '#999';
+                  this.style.transform = 'translateY(0)';
+                "
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                  />
+                </svg>
+              </a>
+
+              <!-- GitHub -->
+              <a
+                href="https://github.com/jsmakers"
+                target="_blank"
+                style="
+                  color: #999;
+                  text-decoration: none;
+                  transition: all 0.3s ease;
+                "
+                onmouseover="
+                  this.style.color = '#4078c0';
+                  this.style.transform = 'translateY(-2px)';
+                "
+                onmouseout="
+                  this.style.color = '#999';
+                  this.style.transform = 'translateY(0)';
+                "
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                  />
+                </svg>
+              </a>
+
+              <!-- Discord -->
+              <a
+                href="https://discord.gg/jsmakers"
+                target="_blank"
+                style="
+                  color: #999;
+                  text-decoration: none;
+                  transition: all 0.3s ease;
+                "
+                onmouseover="
+                  this.style.color = '#5865F2';
+                  this.style.transform = 'translateY(-2px)';
+                "
+                onmouseout="
+                  this.style.color = '#999';
+                  this.style.transform = 'translateY(0)';
+                "
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M20.317 4.369a19.791 19.791 0 00-4.885-1.515a.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0a12.64 12.64 0 00-.617-1.25a.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057a19.9 19.9 0 005.993 3.03a.078.078 0 00.084-.028a14.09 14.09 0 001.226-1.994a.076.076 0 00-.041-.106a13.107 13.107 0 01-1.872-.892a.077.077 0 01-.008-.128a10.2 10.2 0 00.372-.292a.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127a12.299 12.299 0 01-1.873.892a.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028a19.839 19.839 0 006.002-3.03a.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h4
+              style="
+                font-family: &quot;Google Sans&quot;, sans-serif;
+                font-size: 16px;
+                color: #ffffff;
+                margin-bottom: 20px;
+                font-weight: bold;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+              "
+            >
+              LEGAL
+            </h4>
+            <div
+              style="
+                display: flex;
+                flex-direction: row;
+                gap: 30px;
+                align-items: center;
+                justify-content: flex-end;
+              "
+            >
+              <a
+                href="legal-notice.html"
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 14px;
+                  color: #999999;
+                  text-decoration: none;
+                  transition: color 0.3s ease;
+                  white-space: nowrap;
+                "
+                onmouseover="this.style.color = '#ffffff'"
+                onmouseout="this.style.color = '#999999'"
+              >
+                LEGAL NOTICE
+              </a>
+              <a
+                href="privacy-policy.html"
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 14px;
+                  color: #999999;
+                  text-decoration: none;
+                  transition: color 0.3s ease;
+                  white-space: nowrap;
+                "
+                onmouseover="this.style.color = '#ffffff'"
+                onmouseout="this.style.color = '#999999'"
+              >
+                PRIVACY POLICY
+              </a>
+              <a
+                href="cookies-policy.html"
+                style="
+                  font-family: &quot;Google Sans&quot;, sans-serif;
+                  font-size: 14px;
+                  color: #999999;
+                  text-decoration: none;
+                  transition: color 0.3s ease;
+                  white-space: nowrap;
+                "
+                onmouseover="this.style.color = '#ffffff'"
+                onmouseout="this.style.color = '#999999'"
+              >
+                COOKIES POLICY
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 10px;
+          border-top: 1px solid #333333;
+          text-align: center;
+        "
+      >
+        <p
+          style="
+            font-family: &quot;Google Sans&quot;, sans-serif;
+            font-size: 12px;
+            color: #666666;
+            letter-spacing: 0.5px;
+            margin: 8px 0;
+          "
+        >
+          © 2026 JS MAKERS. All rights reserved
+        </p>
+      </div>
+    </footer>
+
+    <style>
+      footer > div:first-child > div:last-child {
+        margin-left: auto !important;
+        text-align: right !important;
+        padding-right: 20px !important; /* ADDED: Control right padding */
+      }
+
+      footer > div:first-child > div:last-child > div:first-child > div {
+        justify-content: flex-end !important;
+      }
+
+      footer > div:first-child > div:last-child > div:last-child > div {
+        align-items: flex-end !important;
+      }
+
+      @media (max-width: 768px) {
+        footer {
+          padding: 30px 0 20px 0 !important;
+        }
+
+        footer > div:first-child {
+          flex-direction: column !important;
+          align-items: center !important;
+          text-align: center !important;
+          padding: 0 20px !important;
+        }
+
+        footer > div:first-child > div {
+          width: 100% !important;
+          text-align: center !important;
+          margin-left: 0 !important;
+          margin-right: 0 !important;
+          padding-right: 0 !important; /* Reset on mobile */
+        }
+
+        footer > div:first-child > div:last-child {
+          margin-left: 0 !important;
+          text-align: center !important;
+          padding-right: 0 !important; /* Reset on mobile */
+        }
+
+        footer > div:first-child > div:last-child > div:first-child > div {
+          justify-content: center !important;
+          padding-right: 0 !important; /* Reset on mobile */
+        }
+
+        footer > div:first-child > div:last-child > div:last-child > div {
+          align-items: center !important;
+          flex-direction: column !important;
+          gap: 15px !important;
+        }
+
+        footer > div:last-child {
+          padding: 10px 15px 0 15px !important;
+        }
+
+        /* Center social icons on mobile */
+        footer > div:first-child > div:last-child > div:first-child > div {
+          justify-content: center !important;
+        }
+
+        /* Reduce gap between social icons on mobile */
+        footer > div:first-child > div:last-child > div:first-child > div {
+          gap: 15px !important;
+        }
+      }
+
+      /* Remove circle hover effects for social icons */
+      footer a[target="_blank"]:hover {
+        transform: scale(1.1) !important;
+        box-shadow: none !important;
+      }
+
+      footer a:not([target="_blank"]):hover {
+        padding-left: 5px !important;
+      }
+    </style>
+    <script>
+      //==============    Navigation scroll behavior     =================//
+      let lastScrollTop = 0;
+      const nav = document.querySelector("nav");
+      const navLeft = document.querySelector(".nav-left");
+      const menuToggle = document.getElementById("menuToggle");
+
+      // Function to control navigation visibility
+      function updateNavVisibility() {
+        const scrollTop =
+          window.pageYOffset || document.documentElement.scrollTop;
+
+        // If at the very top (≤ 50px) - SHOW navigation
+        if (scrollTop <= 50) {
+          // Remove hidden class to show nav
+          nav.classList.remove("nav-hidden");
+          navLeft.classList.remove("nav-hidden");
+
+          // Show menu toggle on mobile
+          if (menuToggle && window.innerWidth <= 768) {
+            menuToggle.style.transform = "translateY(0)";
+          }
+        }
+        // If scrolled past 50px - HIDE navigation (regardless of scroll direction)
+        else {
+          // Add hidden class to hide nav
+          nav.classList.add("nav-hidden");
+          navLeft.classList.add("nav-hidden");
+
+          // Hide menu toggle on mobile
+          if (menuToggle && window.innerWidth <= 768) {
+            menuToggle.style.transform = "translateY(-100px)";
+          }
+        }
+
+        lastScrollTop = scrollTop;
+      }
+
+      // Listen for scroll events
+      window.addEventListener("scroll", function () {
+        updateNavVisibility();
+      });
+
+      // Initialize on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        updateNavVisibility();
+      });
+
+      // Update on window resize (for mobile/desktop switching)
+      window.addEventListener("resize", function () {
+        updateNavVisibility();
+      });
+
+      // Also handle when user clicks to go to top
+      let scrollTimeout;
+      window.addEventListener("scroll", function () {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(function () {
+          updateNavVisibility();
+        }, 50);
+      });
+
+      //==============   Mobile menu functionality   =================//
+      const closeMenu = document.getElementById("closeMenu");
+      const mobileNav = document.getElementById("mobileNav");
+
+      if (menuToggle && closeMenu && mobileNav) {
+        menuToggle.addEventListener("click", () => {
+          mobileNav.classList.add("active");
+          document.body.style.overflow = "hidden";
+        });
+
+        closeMenu.addEventListener("click", () => {
+          mobileNav.classList.remove("active");
+          document.body.style.overflow = "auto";
+        });
+
+        mobileNav.addEventListener("click", (e) => {
+          if (e.target === mobileNav) {
+            mobileNav.classList.remove("active");
+            document.body.style.overflow = "auto";
+          }
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && mobileNav.classList.contains("active")) {
+            mobileNav.classList.remove("active");
+            document.body.style.overflow = "auto";
+          }
+        });
+      }
+
+      //=========================  Cart class =========================//
+      class Cart {
+        constructor() {
+          this.items = JSON.parse(localStorage.getItem("jsmakersCart")) || [];
+          this.updateCartCounter();
+        }
+
+        updateCartCounter() {
+          const cartCount = this.items.reduce(
+            (total, item) => total + item.quantity,
+            0,
+          );
+          const badges = document.querySelectorAll(".badge");
+          badges.forEach((badge) => {
+            badge.textContent = cartCount;
+            badge.style.display = cartCount > 0 ? "flex" : "none";
+          });
+        }
+
+        addItem(productId, quantity = 1) {
+          const existingItem = this.items.find((item) => item.id === productId);
+
+          if (existingItem) {
+            existingItem.quantity += quantity;
+          } else {
+            this.items.push({
+              id: productId,
+              quantity: quantity,
+              addedAt: new Date().toISOString(),
+            });
+          }
+
+          this.saveCart();
+          this.updateCartCounter();
+        }
+
+        removeItem(productId) {
+          this.items = this.items.filter((item) => item.id !== productId);
+          this.saveCart();
+          this.updateCartCounter();
+        }
+
+        clearCart() {
+          this.items = [];
+          this.saveCart();
+          this.updateCartCounter();
+        }
+
+        saveCart() {
+          localStorage.setItem("jsmakersCart", JSON.stringify(this.items));
+        }
+
+        getItemCount() {
+          return this.items.reduce((total, item) => total + item.quantity, 0);
+        }
+      }
+
+      //========================     YouTube Subscribe Button  ==========================//
+      const subscribeBtn = document.getElementById("subscribeBtn");
+      if (subscribeBtn) {
+        subscribeBtn.addEventListener("click", () => {
+          window.open("https://www.youtube.com/@JS.MAKERS", "_blank");
+        });
+
+        // Add hover effects
+        subscribeBtn.addEventListener("mouseenter", () => {
+          subscribeBtn.style.transform = "translateY(-2px)";
+          subscribeBtn.style.background = "#FF0000";
+          subscribeBtn.style.boxShadow = "0 6px 20px rgba(0, 0, 0, 0.2)";
+        });
+
+        subscribeBtn.addEventListener("mouseleave", () => {
+          subscribeBtn.style.transform = "translateY(0)";
+          subscribeBtn.style.background = "#000000";
+          subscribeBtn.style.boxShadow = "none";
+        });
+      }
+
+      // Initialize cart when page loads
+      document.addEventListener("DOMContentLoaded", () => {
+        const cart = new Cart();
+
+        // Make cart available globally if needed
+        window.jsmakersCart = cart;
+
+        // Add cart click handlers
+        const cartButtons = document.querySelectorAll(".icon-cart");
+        cartButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            alert(`Cart has ${cart.getItemCount()} item(s)`);
+          });
+        });
+
+        // Handle mobile menu toggle visibility on resize
+        window.addEventListener("resize", () => {
+          if (
+            window.innerWidth > 768 &&
+            mobileNav.classList.contains("active")
+          ) {
+            mobileNav.classList.remove("active");
+            document.body.style.overflow = "auto";
+          }
+        });
+      });
+
+      // ====================== INFINITE WIDTH SLIDER =======================
+      const infiniteImages = [
+        "images/ARM1.jpg",
+        "images/ARM2.jpg",
+        "images/ARM3.jpg",
+        "images/ARM4.jpg",
+        "images/ARM5.jpg",
+      ];
+
+      let infinitePosition = 0;
+      const imageGap = 20;
+      let infiniteInterval;
+      let isSliding = false;
+      let isMobile = false;
+
+      // Check if mobile
+      function checkMobile() {
+        isMobile = window.innerWidth <= 768;
+        return isMobile;
+      }
+
+      // Create TRUE infinite slider
+      function initInfiniteSlider() {
+        const slider = document.getElementById("infiniteSlider");
+        const container = slider.parentElement;
+        const containerWidth = container.offsetWidth;
+
+        checkMobile();
+
+        slider.innerHTML = "";
+
+        if (isMobile) {
+          // MOBILE: Show 2 images per row, horizontal scroll
+          const mobileGap = 10;
+          const imageWidth = Math.floor((containerWidth - mobileGap) / 2);
+
+          // Create images for mobile (no duplication needed for simple scroll)
+          infiniteImages.forEach((img, index) => {
+            const imgContainer = document.createElement("div");
+            imgContainer.style.width = `${imageWidth}px`;
+            imgContainer.style.flexShrink = "0";
+            imgContainer.style.borderRadius = "0";
+            imgContainer.style.overflow = "hidden";
+            imgContainer.style.cursor = "pointer";
+            imgContainer.style.border = "none";
+            imgContainer.style.boxShadow = "none";
+
+            const imgElement = document.createElement("img");
+            imgElement.src = img;
+            imgElement.alt = `Image ${index + 1}`;
+            imgElement.style.width = "100%";
+            imgElement.style.height = "180px";
+            imgElement.style.objectFit = "cover";
+            imgElement.style.display = "block";
+            imgElement.style.transition = "transform 0.3s ease";
+
+            imgContainer.addEventListener("mouseenter", () => {
+              imgElement.style.transform = "scale(1.05)";
+            });
+
+            imgContainer.addEventListener("mouseleave", () => {
+              imgElement.style.transform = "scale(1)";
+            });
+
+            imgContainer.appendChild(imgElement);
+            slider.appendChild(imgContainer);
+          });
+
+          // For mobile, disable auto-slide and transform animations
+          slider.style.transition = "none";
+          slider.style.transform = "translateX(0)";
+          clearInterval(infiniteInterval);
+        } else {
+          // DESKTOP: Original infinite slider with 4 images
+          const totalGaps = imageGap * 3;
+          const availableWidth = containerWidth - totalGaps;
+          const imageWidth = Math.floor(availableWidth / 4);
+
+          // Create TWO sets of images for seamless infinite effect
+          const doubleImages = [...infiniteImages, ...infiniteImages];
+
+          doubleImages.forEach((img, index) => {
+            const imgContainer = document.createElement("div");
+            imgContainer.style.width = `${imageWidth}px`;
+            imgContainer.style.flexShrink = "0";
+            imgContainer.style.borderRadius = "0";
+            imgContainer.style.overflow = "hidden";
+            imgContainer.style.cursor = "pointer";
+            imgContainer.style.border = "none";
+            imgContainer.style.boxShadow = "none";
+
+            const imgElement = document.createElement("img");
+            imgElement.src = img;
+            imgElement.alt = `Image ${(index % infiniteImages.length) + 1}`;
+            imgElement.style.width = "100%";
+            imgElement.style.height = "200px";
+            imgElement.style.objectFit = "cover";
+            imgElement.style.display = "block";
+            imgElement.style.transition = "transform 0.3s ease";
+
+            imgContainer.addEventListener("mouseenter", () => {
+              imgElement.style.transform = "scale(1.05)";
+            });
+
+            imgContainer.addEventListener("mouseleave", () => {
+              imgElement.style.transform = "scale(1)";
+            });
+
+            imgContainer.appendChild(imgElement);
+            slider.appendChild(imgContainer);
+          });
+
+          updateInfiniteSlider();
+          startInfiniteAutoSlide();
+        }
+      }
+
+      // Update slider position (desktop only)
+      function updateInfiniteSlider() {
+        if (isMobile) return;
+
+        const slider = document.getElementById("infiniteSlider");
+        const container = slider.parentElement;
+        const containerWidth = container.offsetWidth;
+
+        const totalGaps = imageGap * 3;
+        const availableWidth = containerWidth - totalGaps;
+        const imageWidth = Math.floor(availableWidth / 4);
+
+        const moveDistance = infinitePosition * (imageWidth + imageGap);
+        slider.style.transform = `translateX(-${moveDistance}px)`;
+      }
+
+      // Move FORWARD infinitely (desktop only)
+      function infiniteNext() {
+        if (isSliding || isMobile) return;
+        isSliding = true;
+
+        infinitePosition++;
+
+        if (infinitePosition >= infiniteImages.length) {
+          setTimeout(() => {
+            const slider = document.getElementById("infiniteSlider");
+            slider.style.transition = "none";
+            infinitePosition = 0;
+            updateInfiniteSlider();
+
+            setTimeout(() => {
+              slider.style.transition = "transform 0.8s ease";
+              isSliding = false;
+            }, 50);
+          }, 800);
+        } else {
+          updateInfiniteSlider();
+          setTimeout(() => {
+            isSliding = false;
+          }, 800);
+        }
+
+        resetInfiniteInterval();
+      }
+
+      // Move BACKWARD infinitely (desktop only)
+      function infinitePrev() {
+        if (isSliding || isMobile) return;
+        isSliding = true;
+
+        infinitePosition--;
+
+        if (infinitePosition < 0) {
+          infinitePosition = infiniteImages.length - 1;
+          updateInfiniteSlider();
+
+          setTimeout(() => {
+            const slider = document.getElementById("infiniteSlider");
+            slider.style.transition = "none";
+            infinitePosition = infiniteImages.length - 1;
+            updateInfiniteSlider();
+
+            setTimeout(() => {
+              slider.style.transition = "transform 0.8s ease";
+              isSliding = false;
+            }, 50);
+          }, 800);
+        } else {
+          updateInfiniteSlider();
+          setTimeout(() => {
+            isSliding = false;
+          }, 800);
+        }
+
+        resetInfiniteInterval();
+      }
+
+      // Auto-slide interval management (desktop only)
+      function startInfiniteAutoSlide() {
+        if (isMobile) return;
+        clearInterval(infiniteInterval);
+        infiniteInterval = setInterval(infiniteNext, 3000);
+      }
+
+      function resetInfiniteInterval() {
+        if (isMobile) return;
+        clearInterval(infiniteInterval);
+        startInfiniteAutoSlide();
+      }
+
+      // Initialize slider
+      document.addEventListener("DOMContentLoaded", () => {
+        initInfiniteSlider();
+
+        // Button events (desktop only)
+        const prevBtn = document.getElementById("infinitePrevBtn");
+        const nextBtn = document.getElementById("infiniteNextBtn");
+
+        if (prevBtn && nextBtn) {
+          prevBtn.addEventListener("click", infinitePrev);
+          nextBtn.addEventListener("click", infiniteNext);
+
+          // Button hover effects
+          [prevBtn, nextBtn].forEach((btn) => {
+            btn.addEventListener("mouseenter", () => {
+              if (!isMobile) {
+                btn.style.transform = "translateY(-50%) scale(1.15)";
+                btn.style.background = "#666666";
+              }
+            });
+
+            btn.addEventListener("mouseleave", () => {
+              if (!isMobile) {
+                btn.style.transform = "translateY(-50%) scale(1)";
+                btn.style.background = "#808080";
+              }
+            });
+          });
+        }
+
+        // Pause on hover (desktop only)
+        if (!isMobile) {
+          const sliderArea =
+            document.getElementById("infiniteSlider").parentElement
+              .parentElement;
+          sliderArea.addEventListener("mouseenter", () =>
+            clearInterval(infiniteInterval),
+          );
+          sliderArea.addEventListener("mouseleave", startInfiniteAutoSlide);
+        }
+
+        // Resize handler
+        let resizeTimer;
+        window.addEventListener("resize", () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            initInfiniteSlider();
+          }, 250);
+        });
+      });
+
+      // Re-init on load
+      window.addEventListener("load", initInfiniteSlider);
+    </script>
+  </body>
+</html>
